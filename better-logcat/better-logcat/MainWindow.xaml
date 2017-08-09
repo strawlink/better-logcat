@@ -1,0 +1,221 @@
+﻿<Window x:Class="better_logcat.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:better_logcat"
+        mc:Ignorable="d"
+        Title="TimberCat" Height="800" Width="1400" Background="#FF161616"
+        Name="Window1">
+    <Window.Resources>
+        <Style x:Key="GridViewColumnHeaderStyle1" TargetType="{x:Type GridViewColumnHeader}">
+            <!--<Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="Transparent">
+                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            -->
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="Transparent"/>
+            <!--<Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="12" />-->
+        </Style>
+        <Style TargetType="ScrollBar">
+            <Style.Triggers>
+                <!--<Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="MinWidth" Value="10"/>
+                    <Setter Property="Width" Value="10"/>
+                </Trigger>-->
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="10"/>
+                    <Setter Property="Height" Value="10"/>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Opacity" Value="0.4"/>
+            <Setter Property="Background" Value="#FF212121"/>
+        </Style>
+        <Style TargetType="{x:Type ListViewItem}" x:Key="{x:Type ListViewItem}" >
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="UIElement.SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+
+                        <Border SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Background="{TemplateBinding Background}">
+
+                            <Grid>
+
+                                <!-- This is used when GridView is put inside the ListView -->
+                                <GridViewRowPresenter Content="{TemplateBinding ContentControl.Content}"
+                                          HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                          SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
+
+                                <!-- This is used for ListView that does not use GridView -->
+                                <ContentPresenter x:Name="contentPresenter"
+                                      Content="{TemplateBinding ContentControl.Content}"
+                                      Visibility="Collapsed"
+                                      ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                                      ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}"
+                                      HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                      SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
+                            </Grid>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                                <Setter TargetName="contentPresenter" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#FF223F4D" />
+                                <Setter Property="BorderBrush" Value="#FF223F4D" />
+                                <Setter Property="BorderThickness" Value="1" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="403,23,0,0" VerticalAlignment="Top" Width="73" Height="22"/>
+
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" Width="308" RenderTransformOrigin="0.125,0"/>
+        <Button x:Name="button_Copy" Content="Button" HorizontalAlignment="Left" Margin="506,25,0,0" VerticalAlignment="Top" Width="75"/>
+        <DockPanel>
+
+            <Menu x:Name="menu" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF212121">
+                <MenuItem Header="File" Foreground="#FFF0F0F0">
+                    <CheckBox Content="test"/>
+                </MenuItem>
+            </Menu>
+
+
+            <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#FF212121">
+                <StatusBarItem Content="Status" Foreground="#FFF0F0F0"/>
+
+                <StatusBarItem HorizontalAlignment="Right">
+                    <CheckBox x:Name="autoScrollCheckBox" Content="Auto-scroll" Foreground="#FFF0F0F0" IsChecked="{Binding ElementName=Window1, Path=AutoScrollEnabled, Mode=TwoWay}"/>
+                </StatusBarItem>
+            </StatusBar>
+        </DockPanel>
+
+        <Grid Margin="10,50,10,34">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="300*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ListBox x:Name="listBox" Margin="0,23,0,0" Foreground="#FFF0F0F0" Background="#FF212121" BorderBrush="#FF3C3C3C">
+                    <CheckBox Content="test" Foreground="#FFF0F0F0"/>
+                    <ListBoxItem Content="test2"/>
+                </ListBox>
+
+                <GridSplitter Grid.Row="1" Height ="5" HorizontalAlignment="Stretch" Background="#FF212121"/>
+
+                <ListBox x:Name="listBox2" Grid.Row="2" Margin="0,23,0,0" Foreground="#FFF0F0F0" Background="#FF212121" BorderBrush="#FF3C3C3C">
+                    <CheckBox Content="test3" Foreground="#FFF0F0F0" Background="#FF212121"/>
+                    <ListBoxItem Content="test4"/>
+                </ListBox>
+                <TextBox x:Name="textBox_Copy" Margin="0" TextWrapping="Wrap" Text="Search in filters.." VerticalAlignment="Top" Foreground="#FFF0F0F0" Background="#FF212121" BorderBrush="#FF3C3C3C"/>
+                <TextBox x:Name="textBox_Copy1" TextWrapping="Wrap" Text="Search in Tag explorer.." VerticalAlignment="Top" Grid.Row="2" Foreground="#FFF0F0F0" Background="#FF212121" BorderBrush="#FF3C3C3C"/>
+
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="#FF212121"/>
+
+            <ListView ItemsSource="{Binding}" x:Name="logListView" Grid.Column="2" Margin="0,23,0,0" FontFamily="Consolas" VirtualizingStackPanel.IsVirtualizing="True" Background="#FF212121" Foreground="#FFF0F0F0" BorderBrush="#FF3C3C3C" MouseWheel="logListView_MouseWheel" PreviewMouseWheel="logListView_PreviewMouseWheel" SelectionChanged="logListView_SelectionChanged">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="False" ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
+                        <GridViewColumn Header="!">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Level}" Foreground="Black" Padding="10,0,10,0" Background="{Binding Color}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Time">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss.fff}'}" Foreground="{Binding Color}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="PID" Width="50">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Pid}" Foreground="{Binding Color}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Tag" Width="180">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Tag}" Foreground="{Binding Color}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Text" Width="1000">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Grid Grid.Column="2">
+                <!--<TextBox  Width="250"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="SearchTermTextBox" Margin="5"/>-->
+                <TextBox x:Name="logSearchTextBox" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="logSearchTextBox_TextChanged" BorderBrush="#FF3C3C3C" Background="#FF212121" Foreground="#FFF0F0F0"/>
+                <TextBlock IsHitTestVisible="False" Text="Search.." VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0" Foreground="DarkGray">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=logSearchTextBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+        </Grid>
+
+
+
+    </Grid>
+</Window>
